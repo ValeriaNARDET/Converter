@@ -1,56 +1,59 @@
 <template>
   <div class="currency">
     <p>{{ value }}</p>
-      <div class="radio-group">
-        <label>
-          <input
-            type="radio" 
-            name="operation" 
-            value="sale"
-            :checked="operationType === 'sale' || true"
-            @change="changeOperationType"
-          >
-          Sale
-        </label>
-        <label>
-          <input
-            type="radio" 
-            name="operation" 
-            value="buy"
-            :checked="operationType === 'buy' || false"
-            @change="changeOperationType"
-          >
-          Buy
-        </label>
 
-        <div v-for="(c, i) in cur" :key="i" class="" >
-          <label class="">
-            <span v-text="c.ccy + ' to ' + c.base_ccy"/>
-            <input 
-              type="radio"
-              class=""
-              name="currency"
-              :value="c.ccy + ' to ' + c.base_ccy"
-              :checked="i === chosenOperation"
-              :key="i"
-              @change="setMultipliers(c, i)"
-            >
-          </label>
-        </div>
+    <div class="radio-group">
+      <label>
+        <input
+          type="radio" 
+          name="operation" 
+          value="sale"
+          :checked="operationType === 'sale' || true"
+          @change="changeOperationType"
+        >
+        Sale
+      </label>
+      <label>
+        <input
+          type="radio" 
+          name="operation" 
+          value="buy"
+          :checked="operationType === 'buy' || false"
+          @change="changeOperationType"
+        >
+        Buy
+      </label>
+    </div>
 
-        <button
-          class="button"
-          @click="goToResultPage"
-        >
-          Exchange
-        </button>
-        <button
-          class="button"
-          @click="goBack"
-        >
-          Back
-        </button>
+    <div class="radio-group">
+      <div v-for="(c, i) in cur" :key="i">
+        <label class="">
+          <span v-text="c.ccy + ' to ' + c.base_ccy"/>
+          <input 
+            type="radio"
+            class=""
+            name="currency"
+            :value="c.ccy + ' to ' + c.base_ccy"
+            :checked="i === chosenOperation"
+            :key="i"
+            @change="setMultipliers(c, i)"
+          >
+        </label>
       </div>
+    </div>
+
+    <button
+      class="button"
+      @click="goToResultPage"
+    >
+      Exchange
+    </button>
+    <button
+      class="button"
+      @click="goBack"
+    >
+      Back
+    </button>
   </div>
 </template>
 
@@ -141,4 +144,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.radio-group {
+  margin: 15px;
+}
 </style>
