@@ -1,6 +1,6 @@
 <template>
   <div class="currency">
-    <p>{{ value }}</p>
+    <p>{{ value }} {{ asset || 'USD' }}</p>
 
     <div class="radio-group">
       <label>
@@ -25,7 +25,7 @@
       </label>
     </div>
 
-    <div class="radio-group">
+    <div class="radio-group" v-if="Object.keys(cur).length > 0">
       <div v-for="(c, i) in cur" :key="i">
         <label class="">
           <span v-text="c.ccy + ' to ' + c.base_ccy"/>
@@ -40,6 +40,10 @@
           >
         </label>
       </div>
+    </div>
+    <div v-else>
+      <p>Please turn back to the previous page and then come here again</p>
+      <p>[Sorry, but it is my bug]</p>
     </div>
 
     <button
@@ -67,9 +71,11 @@ export default {
   },
   data() {
     return {
+      cur: '',
       saleMultiplier: 0,
       buyMultiplier: 0,
-      baseCurrency: '',
+      baseAsset: '',
+      asset: '',
       chosenOperation: null,
       operationType: 'sale'
     }
@@ -91,10 +97,12 @@ export default {
     setMultipliers (c, i) {
       this.saleMultiplier = c.sale
       this.buyMultiplier = c.buy
-      this.baseCurrency = c.base_ccy
+      this.baseAsset = c.base_ccy
+      this.asset = c.base
       this.tryStore('sale', c.sale)
       this.tryStore('buy', c.buy)
       this.tryStore('base', c.base_ccy)
+      this.tryStore('asset', c.base)
       this.tryStore('usersChoise', i)
     },
     checkOperations () {
@@ -108,7 +116,8 @@ export default {
     getMultipliers () {
       this.saleMultiplier = this.tryRestore('sale') || 0
       this.buyMultiplier = this.tryRestore('buy') || 0
-      this.baseCurrency = this.tryRestore('base') || ''
+      this.baseAsset = this.tryRestore('base') || ''
+      this.asset = this.tryRestore('asset') || ''
     },
     goToResultPage () {
       const moneyAmount = this.calculateResult()
@@ -119,7 +128,7 @@ export default {
     calculateResult () {
       const multiplier = this.operationType === 'sale' ? this.saleMultiplier : this.buyMultiplier
       const result = this.value*multiplier
-      return result.toFixed(2) + this.baseCurrency
+      return result.toFixed(2) + this.baseAsset
     },
     goBack () {
       this.$router.push({name: "converter", params: {value: this.value}})
