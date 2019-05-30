@@ -45,6 +45,12 @@
         >
           Exchange
         </button>
+        <button
+          class="button"
+          @click="goBack"
+        >
+          Back
+        </button>
       </div>
   </div>
 </template>
@@ -59,7 +65,6 @@ export default {
   },
   data() {
     return {
-      result: '',
       isSale: false,
       saleMultiplier: 0,
       buyMultiplier: 0
@@ -80,18 +85,25 @@ export default {
     changeCurrency (c) {
       this.saleMultiplier = c.sale
       this.buyMultiplier = c.buy
+      this.baseCurrency = c.base_ccy
     },
     getCurrencies () {
       this.$store.dispatch('getCurrencies')
       this.cur = Object.assign({}, this.$store.state.currencies)
-    },
+      },
     goToResultPage () {
-      this.calculateResult()
-      this.$router.push({name: "result", params: {result: this.result}})
+      const moneyAmount = this.calculateResult()
+      const procedure = this.isSale ? 'sale' : 'buy'
+      const props = {moneyAmount, procedure}
+      this.$router.push({name: "result", params: {converterResult: props}})
     },
     calculateResult () {
       const multiplier = this.isSale ? this.saleMultiplier : this.buyMultiplier
-      this.result = this.value*multiplier
+      const result = this.value*multiplier
+      return result.toFixed(2) + this.baseCurrency
+    },
+    goBack () {
+      this.$router.push({name: "converter", params: {value: this.value}})
     }
   }
 }

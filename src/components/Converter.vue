@@ -16,12 +16,21 @@
 <script>
 export default {
   name: "Converter",
+  props: {
+    value: {type: Number, default: 0}
+  },
   data() {
     return {
       amount: ''
     }
   },
+  created () {
+    this.getAmount()
+  },
   methods: {
+    getAmount () {
+      this.amount = this.value || ''
+    },
     goNextPage () {
       this.$router.push({name: "currency", params: {value: +this.amount}})
     },
