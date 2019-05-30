@@ -33,7 +33,7 @@
               :value="c.ccy + ' to ' + c.base_ccy"
               :checked="i === chosenOperation"
               :key="i"
-              @change="changeCurrency(c, i)"
+              @change="setMultipliers(c, i)"
             >
           </label>
         </div>
@@ -64,7 +64,6 @@ export default {
   },
   data() {
     return {
-      // isSale: false,
       saleMultiplier: 0,
       buyMultiplier: 0,
       baseCurrency: '',
@@ -85,9 +84,8 @@ export default {
     changeOperationType (event, value) {
       this.operationType = event.target.value
       this.tryStore('opType', this.operationType)
-      // this.isSale = operation ? 1 : 0
     },
-    changeCurrency (c, i) {
+    setMultipliers (c, i) {
       this.saleMultiplier = c.sale
       this.buyMultiplier = c.buy
       this.baseCurrency = c.base_ccy
